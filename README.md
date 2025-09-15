@@ -4,86 +4,86 @@
 
 El dataset contiene:
 
-- **Consumo energético horario (kWh)** → la demanda eléctrica del puerto.  
-- **Producción solar local (kWh)** → si el puerto tiene paneles solares.  
-- **Clima (temperatura, viento, humedad)** → factores que afectan tanto a consumo como a generación.  
-- **Precio de electricidad (€/MWh)** → permite optimizar costes.  
+- **Consumo energético horario (kWh)** → refleja la demanda eléctrica del puerto.  
+- **Producción solar local (kWh)** → representa la generación de paneles solares en el puerto.  
+- **Clima (temperatura, viento, humedad)** → factores que afectan tanto al consumo como a la generación.  
+- **Precio de electricidad (€/MWh)** → permite optimizar el coste energético.  
 
-👉 Sí, tiene sentido asumir que son estadísticas de un puerto real:
+Estas estadísticas simulan un puerto real:
 
 - **Consumo** → barcos atracados, grúas, refrigeración de contenedores, iluminación, oficinas portuarias.  
 - **Solar** → posible instalación fotovoltaica del puerto.  
-- **Clima** → impacta en la operación (ej. más viento = barcos ajustan potencia).  
+- **Clima** → impacta directamente en la operación (ej. más viento = barcos ajustan potencia).  
 - **Precio** → clave para decidir cuándo consumir, almacenar o vender energía.  
 
 ---
 
-## 🛠 Qué podrías hacer en cada capa
+## 🛠 Estructura del proyecto
 
 ### 🔧 Backend / Infraestructura
-- **Ingesta de datos**: recibir en tiempo real consumo, generación y clima (en la demo se puede simular con este CSV).  
-- **Almacenamiento**: una base de datos tipo *TimescaleDB, InfluxDB o PostgreSQL*.  
-- **Procesamiento**:
-  - KPIs: consumo neto, dependencia de la red, % renovable usado.  
+En el backend se implementará:
+
+- **Ingesta de datos**: se recibirán en tiempo real los datos de consumo, generación solar, clima y precios.  
+- **Almacenamiento**: los datos se guardarán en una base de datos tipo *TimescaleDB, InfluxDB o PostgreSQL*.  
+- **Procesamiento de datos**:
+  - Cálculo de KPIs: consumo neto, dependencia de la red, % de energía renovable usada.  
   - Balance energético: `consumo - generación`.  
   - Coste horario: `consumo * precio`.  
-
-👉 En la hackathon basta con un **API simple** (Flask/FastAPI) que devuelva datos procesados para impresionar.
+- **API**: se expondrá una API (Flask/FastAPI) que devolverá los datos procesados para el frontend y el análisis.
 
 ---
 
 ### 📊 Análisis de Datos
-**Análisis descriptivo**  
-- Horas pico de consumo → cuándo el puerto es más intensivo.  
-- Correlación clima ↔ consumo → ej. frío aumenta consumo.  
-- Relación precios ↔ consumo → optimización de costes.  
+En esta capa se realizará:
 
-**Predicción**  
-- Forecast de consumo (ARIMA, Prophet, regresión lineal).  
-- Predicción de costes energéticos según el mercado.  
-- Predicción de producción solar para planificar uso.  
-
-**Optimización**  
-- Algoritmo que recomiende acciones:  
-  - Cargar baterías cuando el precio es bajo.  
-  - Vender excedente solar cuando el precio es alto.  
-  - Posponer tareas no críticas (ej. carga de contenedores) a horas baratas.  
+- **Análisis descriptivo**:
+  - Identificación de horas pico de consumo.  
+  - Correlación entre clima y consumo (ej. frío aumenta consumo).  
+  - Relación entre precios y consumo para optimización de costes.  
+- **Predicción**:
+  - Forecast de consumo horario mediante ARIMA, Prophet o regresión lineal.  
+  - Predicción de costes energéticos según el mercado.  
+  - Estimación de producción solar futura para planificación de uso.  
+- **Optimización**:
+  - Algoritmo que determina acciones automáticas:
+    - Carga de baterías cuando el precio es bajo.  
+    - Venta de energía solar excedente cuando el precio es alto.  
+    - Posponer tareas no críticas (ej. carga de contenedores) a horas económicas.
 
 ---
 
 ### ⚙️ Automatización / Smart control
-- **Alertas**: notificar cuando el consumo supera cierto umbral o el precio es demasiado alto.  
-- **Scheduling inteligente**: programar operaciones del puerto en base al forecast.  
-- **Simulación de escenarios**:  
-  - ¿Qué pasa si añadimos más solar?  
-  - ¿Qué pasa si introducimos almacenamiento en baterías?  
+En esta capa se implementará:
 
-👉 Esto conecta directamente con **VEO (automatización industrial)** y **Wärtsilä (operación eficiente)**.
+- **Alertas automáticas**: notificación cuando el consumo supere un umbral o el precio sea elevado.  
+- **Scheduling inteligente**: programación de operaciones del puerto basadas en las predicciones.  
+- **Simulación de escenarios**:
+  - Impacto de añadir más energía solar.  
+  - Evaluación de introducir almacenamiento en baterías.  
+
+Estas funcionalidades están alineadas con **VEO (automatización industrial)** y **Wärtsilä (operación eficiente)**.
 
 ---
 
 ### 🖥️ Frontend / Visualización
-Un dashboard atractivo marca la diferencia. Ideas de vistas:  
+En el frontend se desarrollará un dashboard que mostrará:
 
 - **Vista en tiempo real**: consumo actual, generación solar, coste instantáneo.  
 - **Gráficos históricos**: consumo vs generación, coste horario, correlación clima ↔ consumo.  
-- **Predicciones**: curva de consumo esperado para las próximas 24h, costes previstos.  
-- **Recomendaciones automáticas (semáforo)**:  
-  - 🟢 Verde = consumir normal.  
-  - 🟡 Amarillo = mejor esperar.  
-  - 🔴 Rojo = coste alto → ahorrar o usar batería.  
+- **Predicciones**: curvas de consumo esperado para las próximas 24h y costes previstos.  
+- **Recomendaciones automáticas (semáforo)**:
+  - 🟢 Verde → consumir normal.  
+  - 🟡 Amarillo → mejor esperar.  
+  - 🔴 Rojo → coste alto → ahorro o uso de batería.  
 
-👉 Tecnologías posibles:  
-- Web rápida en **React + Chart.js/Recharts**.  
-- O un dashboard rápido en **Streamlit**.  
+Tecnologías empleadas: **React + Chart.js/Recharts** o **Streamlit** para una solución rápida.
 
 ---
 
 ## 🚀 Conclusión
-Sí, este dataset tiene sentido como **consumo energético de un puerto en Vaasa**.  
-Con él puedes cubrir todo el stack de una hackathon:  
+El proyecto implementará un sistema completo para un **puerto inteligente en Vaasa**:
 
 - **Backend** → API con datos procesados.  
-- **Análisis** → KPIs + predicciones de consumo/coste.  
-- **Automatización** → reglas inteligentes para reducir costes y emisiones.  
-- **Frontend** → dashboard claro que muestre *impacto real* y recomendaciones.  
+- **Análisis** → KPIs y predicciones de consumo/coste.  
+- **Automatización** → reglas inteligentes para optimizar recursos y reducir emisiones.  
+- **Frontend** → dashboard claro que muestre impacto real y recomendaciones de operación.
