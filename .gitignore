@@ -1,0 +1,39 @@
+# --- Entorno virtual ---
+venv/
+.env/
+.venv/
+
+# --- Archivos de Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+*.egg
+*.log
+
+# --- Configuración local ---
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# --- Jupyter notebooks ---
+.ipynb_checkpoints
+
+# --- IDEs ---
+.vscode/
+.idea/
+*.swp
+
+# --- Archivos de instalación ---
+build/
+dist/
+pip-wheel-metadata/
+.eggs/
+*.spec
+
+# --- Archivos del sistema ---
+.DS_Store
+Thumbs.db
