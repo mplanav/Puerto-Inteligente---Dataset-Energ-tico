@@ -37,3 +37,6 @@ pip-wheel-metadata/
 # --- Archivos del sistema ---
 .DS_Store
 Thumbs.db
+
+# --- Credenciales ---
+backend/firebase/servicesAccountKey.json
